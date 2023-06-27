@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/styles/default.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" crossorigin="anonymous"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js" crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
+    <script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/11.7.0/highlight.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/3.2.0/es5/tex-chtml.js" crossorigin="anonymous"></script>
+    <script>hljs.highlightAll();</script>
+    <title>Deutsch-Jozsa Web App</title>
+  </head>
+  <body>
+    <div class="container mt-5">
+      <h1 class="text-center mb-4">Deutsch-Jozsa Algorithm</h1>
+      <div class="text-center mb-5">
+        <button class="btn btn-primary mx-2" onclick="runDeustchJozsa('cirq')">Run on Cirq</button>
+        <button class="btn btn-primary mx-2" onclick="runDeustchJozsa('qiskit')">Run on Qiskit</button>
+        <button class="btn btn-primary mx-2" onclick="runDeustchJozsa('pennylane')">Run on PennyLane</button>
+      </div>
+      <div class="row">
+        <div class="col-md-6">
+          <h4>Code Snippet</h4>
+          <pre><code id="code-output" class="python p-3" style="border: 1px solid #e5e5e5; background-color: #f8f9fa"></code></pre>
+        </div>
+        <div class="col-md-6">
+          <h4>Circuit Output</h4>
+          <pre id="circuit-output" class="p-3" style="border: 1px solid #e5e5e5; background-color: #f8f9fa"></pre>
+          <div id="function-result"></div>
+        </div>
+      </div>
+      <div class="row justify-content-center mt-3">
+        <div class="col-md-8">
+          <p>The Deutsch-Jozsa algorithm is one of the first quantum algorithm’s developed by pioneers David Deutsch and Richard Jozsa. This algorithm showcases an efficient quantum solution to a problem that cannot be solved classically but instead can be solved using a quantum device. <br><br>
+
+          The algorithm proposed is solving a black box problem and trying to determine what the black box is. The problem itself is not very applicable in real life but showcases an occasion where a quantum algorithm performs exponentially better than a classical one. <br><br>
+
+          Let \(U_f\) be an oracle (black box) that computes a Boolean function which only takes binary inputs (0’s or 1’s). These functions can be represented as \(f: \{0, 1\}^n \to  \{0, 1\}\). This oracle evaluates two types of functions, constant or balanced. <br><br>
+
+          A constant function takes any input and returns only 0’s or only 1’s and a balanced function takes any input and returns exactly half 0’s and half 1’s. <br><br>
+
+          <strong>Constant:</strong> 011010 → \(U_f\) → 000000  
+          <strong>Balanced:</strong> 000011 → \(U_f\) → 111000 <br><br>
+
+          The goal is to determine what type of function is \(U_f\) based on only the outputs. If the input is as large as \(2^n\) then the amount of queries a classical computer will have to make is \(2n/2+1\). We can see for a large enough n this problem scales exponentially and becomes inefficient to solve classically. However, leveraging a quantum algorithm we only need to query the oracle once to determine the type of function for \(U_f\). This is possible because the state of its output might be in a coherent superposition of states corresponding to different answers, each which solves the problem (Deutsch 1992). <br><br></p>
+        </div>
+      </div>
+    </div>
+    <script>
+      async function runDeustchJozsa(sdk) {
+        const response = await $.post('/run_deustch_jozsa', { sdk: sdk });
+        document.getElementById('code-output').textContent = response.code;
+        document.getElementById('circuit-output').textContent = response.circuit;
+        document.getElementById('function-result').innerHTML = `<p><strong>${response.output}</strong></p>`;
+        hljs.highlightElement(document.getElementById('code-output'));
+      }
+    </script>
+  </body>
+</html>
+
+
+
+
